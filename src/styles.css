@@ -1,0 +1,166 @@
+* {
+  font-family: "Noto Sans", Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.frame {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.flex-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 28px;
+  grid-row-gap: 10px;
+}
+
+/* Components */
+
+.extensions-list {
+  margin-bottom: 2em;
+}
+
+.extension-card {
+  background-color: #c0e3ff;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5em;
+}
+.not-active {
+  filter: grayscale(1);
+}
+
+.extension-icon {
+  max-width: 32px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Filter Buttons */
+/* Base button style */
+.btn-filter {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  background-color: #2b2d3a; /* default unselected */
+  color: #c9cbd3;
+  transition: background-color 0.25s ease, color 0.25s ease,
+    box-shadow 0.25s ease, transform 0.25s ease;
+  outline: none;
+}
+
+/* Hover state for all buttons */
+.btn-filter:hover {
+  background-color: #3a3d4f;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Focus state for all buttons */
+.btn-filter:focus {
+  box-shadow: 0 0 0 3px rgba(100, 100, 255, 0.3);
+}
+
+/* Active (selected) filter */
+.btn-filter.active-filter {
+  background-color: #f25b5b;
+  color: white;
+}
+
+/* Active hover and focus override */
+.btn-filter.active-filter:hover {
+  background-color: #e04a4a;
+}
+
+.btn-filter.active-filter:focus {
+  box-shadow: 0 0 0 3px rgba(242, 91, 91, 0.4);
+}
+
+/* Components */
+
+#extension-list-header {
+  width: 100%;
+  justify-content: space-between;
+  margin: 1em auto;
+
+  > .flex-container {
+    width: 100%;
+    justify-content: space-between;
+
+    > .flex-container {
+      width: 20%;
+      justify-content: space-between;
+    }
+  }
+}

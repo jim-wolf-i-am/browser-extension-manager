@@ -2,29 +2,24 @@ import { useState } from "react";
 // import extensions from "./data/data.json";
 import "./styles.css";
 
-// v5 - can I have a separate list of Uninstalled Extensions?
-
 const initialExtensions = [
   {
     logo: "./assets/images/logo-devlens.svg",
     name: "DevLens",
     description:
       "Quickly inspect page layouts and visualize element boundaries.",
-    isInstalled: true,
     isActive: true,
   },
   {
     logo: "./assets/images/logo-style-spy.svg",
     name: "StyleSpy",
     description: "Instantly analyze and copy CSS from any webpage element.",
-    isInstalled: true,
     isActive: true,
   },
   {
     logo: "./assets/images/logo-speed-boost.svg",
     name: "SpeedBoost",
     description: "Optimizes browser resource usage to accelerate page loading.",
-    isInstalled: true,
     isActive: false,
   },
   {
@@ -32,14 +27,12 @@ const initialExtensions = [
     name: "JSONWizard",
     description:
       "Formats, validates, and prettifies JSON responses in-browser.",
-    isInstalled: true,
     isActive: true,
   },
   {
     logo: "./assets/images/logo-tab-master-pro.svg",
     name: "TabMaster Pro",
     description: "Organizes browser tabs into groups and sessions.",
-    isInstalled: true,
     isActive: true,
   },
   {
@@ -47,7 +40,6 @@ const initialExtensions = [
     name: "ViewportBuddy",
     description:
       "Simulates various screen resolutions directly within the browser.",
-    isInstalled: true,
     isActive: false,
   },
   {
@@ -55,7 +47,6 @@ const initialExtensions = [
     name: "Markup Notes",
     description:
       "Enables annotation and notes directly onto webpages for collaborative debugging.",
-    isInstalled: true,
     isActive: true,
   },
   {
@@ -63,28 +54,24 @@ const initialExtensions = [
     name: "GridGuides",
     description:
       "Overlay customizable grids and alignment guides on any webpage.",
-    isInstalled: true,
     isActive: false,
   },
   {
     logo: "./assets/images/logo-palette-picker.svg",
     name: "Palette Picker",
     description: "Instantly extracts color palettes from any webpage.",
-    isInstalled: true,
     isActive: true,
   },
   {
     logo: "./assets/images/logo-link-checker.svg",
     name: "LinkChecker",
     description: "Scans and highlights broken links on any page.",
-    isInstalled: true,
     isActive: true,
   },
   {
     logo: "./assets/images/logo-dom-snapshot.svg",
     name: "DOM Snapshot",
     description: "Capture and export DOM structures quickly.",
-    isInstalled: true,
     isActive: false,
   },
   {
@@ -92,7 +79,6 @@ const initialExtensions = [
     name: "ConsolePlus",
     description:
       "Enhanced developer console with advanced filtering and logging.",
-    isInstalled: false,
     isActive: true,
   },
 ];
@@ -112,16 +98,6 @@ export default function App() {
     );
   }
 
-  function handleInstall(name) {
-    setExtensions((prevExtensions) =>
-      prevExtensions.map((ext) =>
-        ext.name === name
-          ? { ...ext, isInstalled: !ext.isInstalled, isActive: false }
-          : ext
-      )
-    );
-  }
-
   function handleFilterBy(id) {
     // setExtensions((prevExtensions) => {
     //   if (id === "all") {
@@ -135,18 +111,10 @@ export default function App() {
     setFilterBy(id);
   }
 
-  const filteredExtensions = extensions.filter((ext) => {
+  const displayedExtensions = extensions.filter((ext) => {
     if (filterBy === "active") return ext.isActive;
     if (filterBy === "inactive") return !ext.isActive;
     return true; // "all" or default
-  });
-
-  const installedExtensions = filteredExtensions.filter((ext) => {
-    return ext.isInstalled;
-  });
-
-  const uninstalledExtensions = filteredExtensions.filter((ext) => {
-    return !ext.isInstalled;
   });
 
   return (
@@ -157,17 +125,9 @@ export default function App() {
         filterBy={filterBy}
       />
       <ExtensionsList
-        extensions={installedExtensions}
-        handleInstall={handleInstall}
+        extensions={displayedExtensions}
         handleActiveSwitch={handleActiveSwitch}
       />
-      <ExtensionsList
-        extensions={uninstalledExtensions}
-        handleInstall={handleInstall}
-        handleActiveSwitch={handleActiveSwitch}
-      >
-        Uninstalled Extensions
-      </ExtensionsList>
     </div>
   );
 }
@@ -183,17 +143,13 @@ function PageHeader() {
   );
 }
 
-function Button({
-  id,
-  className,
-  filterBy,
-  onClick,
-  handleInstall,
-  handleFilterBy,
-  children,
-}) {
+function Button({ id, className, filterBy, handleFilterBy, children }) {
   return (
-    <button id={id} className={className} onClick={(e) => onClick(e.target.id)}>
+    <button
+      id={id}
+      className={className}
+      onClick={(e) => handleFilterBy(e.target.id)}
+    >
       {children}
     </button>
   );
@@ -210,7 +166,7 @@ function ExtensionsListHeader({ filterBy, handleFilterBy }) {
             className={
               `btn-filter` + (filterBy === "all" ? " active-filter" : "")
             }
-            onClick={handleFilterBy}
+            handleFilterBy={handleFilterBy}
             key={"all"}
           >
             All
@@ -220,7 +176,7 @@ function ExtensionsListHeader({ filterBy, handleFilterBy }) {
             className={
               `btn-filter` + (filterBy === "active" ? " active-filter" : "")
             }
-            onClick={handleFilterBy}
+            handleFilterBy={handleFilterBy}
             key={"active"}
           >
             Active
@@ -230,7 +186,7 @@ function ExtensionsListHeader({ filterBy, handleFilterBy }) {
             className={
               `btn-filter` + (filterBy === "inactive" ? " active-filter" : "")
             }
-            onClick={handleFilterBy}
+            handleFilterBy={handleFilterBy}
             key={"inactive"}
           >
             Inactive
@@ -241,42 +197,24 @@ function ExtensionsListHeader({ filterBy, handleFilterBy }) {
   );
 }
 
-function ExtensionsList({
-  extensions,
-  handleInstall,
-  handleActiveSwitch,
-  children,
-}) {
+function ExtensionsList({ extensions, handleActiveSwitch }) {
   return (
-    <>
-      <h2>{children}</h2>
-      <ul className="grid-container extensions-list">
-        {extensions.map((extension) => (
-          <Extension
-            logo={extension.logo}
-            name={extension.name}
-            description={extension.description}
-            isinstalled={extension.isInstalled}
-            isactive={extension.isActive}
-            key={extension.name}
-            handleInstall={handleInstall}
-            handleActiveSwitch={handleActiveSwitch}
-          />
-        ))}
-      </ul>
-    </>
+    <ul className="flex-container extension-list">
+      {extensions.map((extension) => (
+        <Extension
+          logo={extension.logo}
+          name={extension.name}
+          description={extension.description}
+          isactive={extension.isActive}
+          key={extension.name}
+          handleActiveSwitch={handleActiveSwitch}
+        />
+      ))}
+    </ul>
   );
 }
 
-function Extension({
-  logo,
-  name,
-  description,
-  isinstalled,
-  isactive,
-  handleInstall,
-  handleActiveSwitch,
-}) {
+function Extension({ logo, name, description, isactive, handleActiveSwitch }) {
   return (
     // isactive && (
     <li
@@ -295,9 +233,7 @@ function Extension({
         </div>
       </div>
       <div className="flex-container">
-        <Button onClick={handleInstall} id={name}>
-          {isinstalled === true ? "uninstall" : "install"}
-        </Button>
+        <Button>Remove</Button>
         <label className="switch">
           <input
             type="checkbox"
